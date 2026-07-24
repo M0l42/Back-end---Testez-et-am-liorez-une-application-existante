@@ -1,9 +1,6 @@
 spring:
   application:
     name: etudiant-backend
-
-jwt:
-  secret: ${JWT_SECRET:sn/171XMXFefRvCNVekoqsACfnqV8KU2CBqoVPh6ClNk20ofWhW1Jkw5vXbCVD7nOsjq9P5aDJ/doGpK9N8L/Q==}
   jpa:
     show-sql: true
     hibernate:
@@ -13,6 +10,9 @@ jwt:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+
+jwt:
+  secret: ${JWT_SECRET:sn/171XMXFefRvCNVekoqsACfnqV8KU2CBqoVPh6ClNk20ofWhW1Jkw5vXbCVD7nOsjq9P5aDJ/doGpK9N8L/Q==}
 
 logging:
   level:

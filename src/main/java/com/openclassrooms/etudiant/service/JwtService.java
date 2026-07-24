@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-generateToken
+
 @Service
 public class JwtService {
 
