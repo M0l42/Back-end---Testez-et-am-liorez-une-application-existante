@@ -1,5 +1,7 @@
 package com.openclassrooms.etudiant.handler;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,30 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST, request);
     }
 
+
+    /**
+     * A unique constraint rejected the write. The service layer checks for duplicates first,
+     * but two concurrent requests can both pass that check, so the database is the real
+     * arbiter. Answer 409 rather than letting it fall through to the generic 500 handler.
+     */
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(value = {DataIntegrityViolationException.class})
+    protected ResponseEntity<Object> handleDataIntegrityViolationException(
+            DataIntegrityViolationException dataIntegrityViolationException, WebRequest request) {
+        logError(dataIntegrityViolationException);
+        return handleExceptionInternal(dataIntegrityViolationException,
+                getErrorDetails(dataIntegrityViolationException, request), new HttpHeaders(),
+                HttpStatus.CONFLICT, request);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = {EntityNotFoundException.class})
+    protected ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException entityNotFoundException,
+                                                                   WebRequest request) {
+        logError(entityNotFoundException);
+        return handleExceptionInternal(entityNotFoundException, getErrorDetails(entityNotFoundException, request),
+                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = {BadCredentialsException.class})
