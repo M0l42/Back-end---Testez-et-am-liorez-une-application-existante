@@ -1,6 +1,9 @@
 spring:
   application:
     name: etudiant-backend
+
+jwt:
+  secret: ${JWT_SECRET:sn/171XMXFefRvCNVekoqsACfnqV8KU2CBqoVPh6ClNk20ofWhW1Jkw5vXbCVD7nOsjq9P5aDJ/doGpK9N8L/Q==}
   jpa:
     show-sql: true
     hibernate:
