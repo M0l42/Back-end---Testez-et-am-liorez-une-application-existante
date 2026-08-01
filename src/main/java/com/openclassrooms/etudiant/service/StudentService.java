@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -34,6 +35,13 @@ public class StudentService {
         Assert.notNull(id, "Id must not be null");
         return studentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Student not found with id " + id));
+    }
+
+    public List<Student> searchStudent(String q) {
+        if (!StringUtils.hasText(q)){
+            return List.of();
+        }
+        return studentRepository.search(q);
     }
 
     public Student update(Long id, Student student) {
