@@ -189,4 +189,28 @@ public class StudentServiceTest {
         // THEN
         verify(studentRepository).delete(student);
     }
+
+    @Test
+    public void test_searchStudent_blank_query_returns_empty_list_without_hitting_repository() {
+        // WHEN
+        List<Student> result = studentService.searchStudent("");
+
+        // THEN
+        assertThat(result).isEmpty();
+        verify(studentRepository, never()).search(any());
+    }
+
+    @Test
+    public void test_searchStudent_with_query_delegates_to_repository() {
+        // GIVEN
+        when(studentRepository.search("John")).thenReturn(List.of(buildStudent(ID)));
+
+        // WHEN
+        List<Student> result = studentService.searchStudent("John");
+
+        // THEN
+        verify(studentRepository).search("John");
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getFirstName()).isEqualTo(FIRST_NAME);
+    }
 }

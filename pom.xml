@@ -160,6 +160,18 @@
 
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+						<!-- Testcontainers' UnixSocketClientProviderStrategy falls back to
+						     Docker API 1.32 when no version is set, which recent Docker
+						     Engine releases (min supported API 1.44+) reject outright. -->
+						<api.version>1.44</api.version>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.12</version>

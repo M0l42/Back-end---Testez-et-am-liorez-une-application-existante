@@ -286,4 +286,37 @@ public class StudentControllerTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+    @Test
+    public void searchStudentsMatchesCaseInsensitivePartial() throws Exception {
+        // GIVEN
+        persistStudent(EMAIL);
+
+        // WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/search")
+                        .header(AUTH_HEADER, BEARER_PREFIX + token)
+                        .param("q", "jo")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                // THEN
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value(EMAIL));
+    }
+
+    @Test
+    public void searchStudentsWithNoMatchReturnsEmptyArray() throws Exception {
+        // GIVEN
+        persistStudent(EMAIL);
+
+        // WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/search")
+                        .header(AUTH_HEADER, BEARER_PREFIX + token)
+                        .param("q", "zzzz")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                // THEN
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(0));
+    }
 }
